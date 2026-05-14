@@ -47,27 +47,27 @@ ds_toolkit/
 
 **Core (no optional deps):**
 ```bash
-pip install ds-toolkit
+pip install dstoolkit-adnan
 ```
 
 **With boosting libraries:**
 ```bash
-pip install "ds-toolkit[boosting]"      # XGBoost + LightGBM + CatBoost
+pip install "dstoolkit-adnan[boosting]"      # XGBoost + LightGBM + CatBoost
 ```
 
 **With tuning + tracking:**
 ```bash
-pip install "ds-toolkit[tune,track]"    # Optuna + MLflow
+pip install "dstoolkit-adnan[tune,track]"    # Optuna + MLflow
 ```
 
 **With SHAP explanations:**
 ```bash
-pip install "ds-toolkit[explain]"       # shap
+pip install "dstoolkit-adnan[explain]"       # shap
 ```
 
 **Everything:**
 ```bash
-pip install "ds-toolkit[all]"
+pip install "dstoolkit-adnan[all]"
 ```
 
 **Development install (editable):**
