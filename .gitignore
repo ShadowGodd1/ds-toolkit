@@ -63,7 +63,7 @@ mlruns/
 mlartifacts/
 
 # Model artefacts
-models/
+/models/
 *.pkl
 *.joblib
 *.h5
@@ -79,8 +79,8 @@ data/
 *.hdf5
 
 # Reports / outputs
-reports/
-outputs/
+/reports/
+/outputs/
 *.html
 
 # ── Docs ─────────────────────────────────────────────────────────────────────
