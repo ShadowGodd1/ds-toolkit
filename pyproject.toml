@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dstoolkit-adnan"
-version = "1.0.2"
+version = "1.0.3"
 description = "Post-collection data science lifecycle toolkit — from raw DataFrame to model card"
 readme = "README.md"
 license = { text = "MIT" }
