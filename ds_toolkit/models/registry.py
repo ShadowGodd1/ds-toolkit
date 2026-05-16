@@ -34,6 +34,7 @@ Usage
 >>> # All except slow ones
 >>> fast = ModelRegistry.get(task="clf", exclude=["mlp", "gbm"])
 """
+
 # Author:  Adnan Mohamud — CEO & Founder, PataDoc (patadoc.com)
 # License: MIT
 
@@ -102,9 +103,7 @@ class ModelRegistry:
         """Return a single estimator by name."""
         all_models = dict(cls.get(task=task))
         if name not in all_models:
-            raise KeyError(
-                f"'{name}' not found. Available: {list(all_models.keys())}"
-            )
+            raise KeyError(f"'{name}' not found. Available: {list(all_models.keys())}")
         return all_models[name]
 
     # ------------------------------------------------------------------
@@ -137,22 +136,30 @@ class ModelRegistry:
         from sklearn.neural_network import MLPClassifier
 
         return {
-            "lr": ("LogisticRegression", LogisticRegression(
-                max_iter=1000, solver="lbfgs", C=1.0, random_state=42
-            )),
-            "rf": ("RandomForest", RandomForestClassifier(
-                n_estimators=200, random_state=42, n_jobs=-1
-            )),
-            "gbm": ("GradientBoosting", GradientBoostingClassifier(
-                n_estimators=200, learning_rate=0.1, max_depth=4, random_state=42
-            )),
-            "et": ("ExtraTrees", ExtraTreesClassifier(
-                n_estimators=200, random_state=42, n_jobs=-1
-            )),
-            "mlp": ("MLP", MLPClassifier(
-                hidden_layer_sizes=(128, 64), max_iter=300,
-                early_stopping=True, random_state=42
-            )),
+            "lr": (
+                "LogisticRegression",
+                LogisticRegression(max_iter=1000, solver="lbfgs", C=1.0, random_state=42),
+            ),
+            "rf": (
+                "RandomForest",
+                RandomForestClassifier(n_estimators=200, random_state=42, n_jobs=-1),
+            ),
+            "gbm": (
+                "GradientBoosting",
+                GradientBoostingClassifier(
+                    n_estimators=200, learning_rate=0.1, max_depth=4, random_state=42
+                ),
+            ),
+            "et": (
+                "ExtraTrees",
+                ExtraTreesClassifier(n_estimators=200, random_state=42, n_jobs=-1),
+            ),
+            "mlp": (
+                "MLP",
+                MLPClassifier(
+                    hidden_layer_sizes=(128, 64), max_iter=300, early_stopping=True, random_state=42
+                ),
+            ),
         }
 
     # --- sklearn regressors ---
@@ -169,19 +176,23 @@ class ModelRegistry:
 
         return {
             "lr": ("Ridge", Ridge(alpha=1.0)),
-            "rf": ("RandomForest", RandomForestRegressor(
-                n_estimators=200, random_state=42, n_jobs=-1
-            )),
-            "gbm": ("GradientBoosting", GradientBoostingRegressor(
-                n_estimators=200, learning_rate=0.1, max_depth=4, random_state=42
-            )),
-            "et": ("ExtraTrees", ExtraTreesRegressor(
-                n_estimators=200, random_state=42, n_jobs=-1
-            )),
-            "mlp": ("MLP", MLPRegressor(
-                hidden_layer_sizes=(128, 64), max_iter=300,
-                early_stopping=True, random_state=42
-            )),
+            "rf": (
+                "RandomForest",
+                RandomForestRegressor(n_estimators=200, random_state=42, n_jobs=-1),
+            ),
+            "gbm": (
+                "GradientBoosting",
+                GradientBoostingRegressor(
+                    n_estimators=200, learning_rate=0.1, max_depth=4, random_state=42
+                ),
+            ),
+            "et": ("ExtraTrees", ExtraTreesRegressor(n_estimators=200, random_state=42, n_jobs=-1)),
+            "mlp": (
+                "MLP",
+                MLPRegressor(
+                    hidden_layer_sizes=(128, 64), max_iter=300, early_stopping=True, random_state=42
+                ),
+            ),
         }
 
     # --- optional boosting classifiers ---
@@ -192,31 +203,57 @@ class ModelRegistry:
 
         try:
             from xgboost import XGBClassifier
-            out["xgboost"] = ("XGBoost", XGBClassifier(
-                n_estimators=300, learning_rate=0.05, max_depth=6,
-                subsample=0.8, colsample_bytree=0.8,
-                use_label_encoder=False, eval_metric="logloss",
-                random_state=42, n_jobs=-1, verbosity=0,
-            ))
+
+            out["xgboost"] = (
+                "XGBoost",
+                XGBClassifier(
+                    n_estimators=300,
+                    learning_rate=0.05,
+                    max_depth=6,
+                    subsample=0.8,
+                    colsample_bytree=0.8,
+                    use_label_encoder=False,
+                    eval_metric="logloss",
+                    random_state=42,
+                    n_jobs=-1,
+                    verbosity=0,
+                ),
+            )
         except ImportError:
             pass
 
         try:
             from lightgbm import LGBMClassifier
-            out["lightgbm"] = ("LightGBM", LGBMClassifier(
-                n_estimators=300, learning_rate=0.05, num_leaves=63,
-                subsample=0.8, colsample_bytree=0.8,
-                random_state=42, n_jobs=-1, verbose=-1,
-            ))
+
+            out["lightgbm"] = (
+                "LightGBM",
+                LGBMClassifier(
+                    n_estimators=300,
+                    learning_rate=0.05,
+                    num_leaves=63,
+                    subsample=0.8,
+                    colsample_bytree=0.8,
+                    random_state=42,
+                    n_jobs=-1,
+                    verbose=-1,
+                ),
+            )
         except ImportError:
             pass
 
         try:
             from catboost import CatBoostClassifier
-            out["catboost"] = ("CatBoost", CatBoostClassifier(
-                iterations=300, learning_rate=0.05, depth=6,
-                random_seed=42, verbose=0,
-            ))
+
+            out["catboost"] = (
+                "CatBoost",
+                CatBoostClassifier(
+                    iterations=300,
+                    learning_rate=0.05,
+                    depth=6,
+                    random_seed=42,
+                    verbose=0,
+                ),
+            )
         except ImportError:
             pass
 
@@ -230,30 +267,55 @@ class ModelRegistry:
 
         try:
             from xgboost import XGBRegressor
-            out["xgboost"] = ("XGBoost", XGBRegressor(
-                n_estimators=300, learning_rate=0.05, max_depth=6,
-                subsample=0.8, colsample_bytree=0.8,
-                random_state=42, n_jobs=-1, verbosity=0,
-            ))
+
+            out["xgboost"] = (
+                "XGBoost",
+                XGBRegressor(
+                    n_estimators=300,
+                    learning_rate=0.05,
+                    max_depth=6,
+                    subsample=0.8,
+                    colsample_bytree=0.8,
+                    random_state=42,
+                    n_jobs=-1,
+                    verbosity=0,
+                ),
+            )
         except ImportError:
             pass
 
         try:
             from lightgbm import LGBMRegressor
-            out["lightgbm"] = ("LightGBM", LGBMRegressor(
-                n_estimators=300, learning_rate=0.05, num_leaves=63,
-                subsample=0.8, colsample_bytree=0.8,
-                random_state=42, n_jobs=-1, verbose=-1,
-            ))
+
+            out["lightgbm"] = (
+                "LightGBM",
+                LGBMRegressor(
+                    n_estimators=300,
+                    learning_rate=0.05,
+                    num_leaves=63,
+                    subsample=0.8,
+                    colsample_bytree=0.8,
+                    random_state=42,
+                    n_jobs=-1,
+                    verbose=-1,
+                ),
+            )
         except ImportError:
             pass
 
         try:
             from catboost import CatBoostRegressor
-            out["catboost"] = ("CatBoost", CatBoostRegressor(
-                iterations=300, learning_rate=0.05, depth=6,
-                random_seed=42, verbose=0,
-            ))
+
+            out["catboost"] = (
+                "CatBoost",
+                CatBoostRegressor(
+                    iterations=300,
+                    learning_rate=0.05,
+                    depth=6,
+                    random_seed=42,
+                    verbose=0,
+                ),
+            )
         except ImportError:
             pass
 

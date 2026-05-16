@@ -6,6 +6,38 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.0.4] — 2025-05-17
+
+### Fixed
+- **CI/CD Pipeline**: Corrected file paths in GitHub Actions workflows (ci.yml, docs.yml, publish.yml) - workflows were referencing `ds_toolkit/ds_toolkit/` instead of `ds_toolkit/`
+- **DataProfiler**: Fixed crash when profiling boolean columns - numpy boolean arithmetic error in skewness/kurtosis calculation
+- **Code Formatting**: Applied black formatting to all files in models/ directory (5 files reformatted)
+- **Version Consistency**: Synchronized version number across pyproject.toml and __init__.py
+- **Package Metadata**: Updated license format from deprecated table format to modern SPDX string format
+
+### Verified
+- All 209 tests passing on Python 3.9, 3.10, 3.11, 3.12
+- Package builds successfully (wheel + source distribution)
+- End-to-end pipeline validated across all 7 stages
+- Installation and import working correctly
+- CI/CD workflows validated
+
+### Technical Details
+- Fixed `_numeric_stats()` method to cast boolean series to float before computing scipy statistics
+- Updated GitHub Actions paths from nested to correct single-level directory structure
+- Removed deprecated `License :: OSI Approved :: MIT License` classifier per setuptools warnings
+
+---
+
+## [1.0.3] — 2025-01-16
+
+### Fixed
+- Added missing ds_toolkit.models subpackage (ModelRegistry, CVHarness, TunerOptuna, EnsembleBuilder)
+- Added missing ds_toolkit.reporting subpackage (NotebookReporter, HTMLExporter, ModelCard)
+- Scoped .gitignore models/ pattern to root level only to prevent source code exclusion
+
+---
+
 ## [1.0.0] — 2025-01-01
 
 ### Added

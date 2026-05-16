@@ -7,6 +7,7 @@ From raw DataFrame to evaluated, tracked, and reported model — in composable, 
   <img src="https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue" alt="Python versions"/>
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"/>
   <img src="https://img.shields.io/badge/tests-209%20passing-brightgreen" alt="Tests"/>
+  <img src="https://img.shields.io/badge/version-1.0.4-blue" alt="Version"/>
   <img src="https://img.shields.io/badge/sklearn-compatible-orange" alt="sklearn compatible"/>
 </p>
 

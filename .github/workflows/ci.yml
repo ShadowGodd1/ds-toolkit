@@ -35,14 +35,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e ".[dev,boosting,fuzzy,explain,tune,track]"
       - name: Lint with ruff
-        run: ruff check ds_toolkit/ds_toolkit/
+        run: ruff check ds_toolkit/
       - name: Check formatting with black
-        run: black --check ds_toolkit/ds_toolkit/
+        run: black --check ds_toolkit/
       - name: Run tests with coverage
         run: |
           pytest tests/ \
             --tb=short \
-            --cov=ds_toolkit/ds_toolkit \
+            --cov=ds_toolkit \
             --cov-report=xml \
             --cov-report=term-missing \
             -q
@@ -67,5 +67,5 @@ jobs:
         run: |
           pip install -e ".[dev,boosting,fuzzy,explain,tune,track]"
       - name: Type check
-        run: mypy ds_toolkit/ds_toolkit/ --ignore-missing-imports
+        run: mypy ds_toolkit/ --ignore-missing-imports
         continue-on-error: true   # non-blocking until full type coverage added

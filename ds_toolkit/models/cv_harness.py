@@ -28,6 +28,7 @@ Usage
 >>> cv_results.best_model       # (name, fitted estimator)
 >>> cv_results.display()        # Jupyter-native ranked table
 """
+
 # Author:  Adnan Mohamud — CEO & Founder, PataDoc (patadoc.com)
 # License: MIT
 
@@ -55,6 +56,7 @@ Task = Literal["clf", "reg", "ts"]
 @dataclass
 class CVResults(DisplayMixin):
     """Output of CVHarness.run()."""
+
     results_df: pd.DataFrame
     summary_df: pd.DataFrame
     best_model: Tuple[str, BaseEstimator]
@@ -153,23 +155,28 @@ class CVHarness:
             t0 = time.perf_counter()
             try:
                 cv_out = cross_validate(
-                    est, X, y,
+                    est,
+                    X,
+                    y,
                     cv=cv,
                     scoring=self.scoring,
                     n_jobs=self.n_jobs,
                     return_train_score=False,
                     error_score="raise",
                 )
-                scores     = cv_out["test_score"]
-                fit_times  = cv_out["fit_time"]
-                elapsed    = time.perf_counter() - t0
+                scores = cv_out["test_score"]
+                fit_times = cv_out["fit_time"]
+                elapsed = time.perf_counter() - t0
 
                 for fold_i, (score, ft) in enumerate(zip(scores, fit_times)):
-                    fold_rows.append({
-                        "model": name, "fold": fold_i + 1,
-                        "score": round(float(score), 6),
-                        "fit_time_s": round(float(ft), 3),
-                    })
+                    fold_rows.append(
+                        {
+                            "model": name,
+                            "fold": fold_i + 1,
+                            "score": round(float(score), 6),
+                            "fit_time_s": round(float(ft), 3),
+                        }
+                    )
 
                 # Refit on full training data for the best model later
                 est_full = clone(estimator)
@@ -187,15 +194,19 @@ class CVHarness:
             except Exception as exc:
                 if self.verbose:
                     print(f"FAILED — {exc}")
-                fold_rows.append({
-                    "model": name, "fold": -1,
-                    "score": np.nan, "fit_time_s": np.nan,
-                })
+                fold_rows.append(
+                    {
+                        "model": name,
+                        "fold": -1,
+                        "score": np.nan,
+                        "fit_time_s": np.nan,
+                    }
+                )
 
-        results_df  = pd.DataFrame(fold_rows)
-        summary_df  = self._summarise(results_df)
-        best_name   = summary_df["model"].iloc[0]
-        best_est    = fitted_models.get(best_name, models[0][1])
+        results_df = pd.DataFrame(fold_rows)
+        summary_df = self._summarise(results_df)
+        best_name = summary_df["model"].iloc[0]
+        best_est = fitted_models.get(best_name, models[0][1])
 
         return CVResults(
             results_df=results_df,

@@ -6,7 +6,7 @@ on:
     paths:
       - "docs/**"
       - "mkdocs.yml"
-      - "ds_toolkit/ds_toolkit/**"
+      - "ds_toolkit/**"
       - "README.md"
 
 permissions:

@@ -150,13 +150,15 @@ class DataProfiler:
     def _numeric_stats(clean: pd.Series) -> dict:
         if clean.empty:
             return {k: np.nan for k in ("min", "max", "mean", "std", "skew", "kurtosis")}
+        # Cast to float to handle boolean series (numpy doesn't support boolean arithmetic for stats)
+        numeric = clean.astype(float)
         return {
-            "min": round(float(clean.min()), 4),
-            "max": round(float(clean.max()), 4),
-            "mean": round(float(clean.mean()), 4),
-            "std": round(float(clean.std()), 4),
-            "skew": round(float(stats.skew(clean)), 4),
-            "kurtosis": round(float(stats.kurtosis(clean)), 4),
+            "min": round(float(numeric.min()), 4),
+            "max": round(float(numeric.max()), 4),
+            "mean": round(float(numeric.mean()), 4),
+            "std": round(float(numeric.std()), 4),
+            "skew": round(float(stats.skew(numeric)), 4),
+            "kurtosis": round(float(stats.kurtosis(numeric)), 4),
         }
 
     def _detect_outliers(self, clean: pd.Series) -> bool:

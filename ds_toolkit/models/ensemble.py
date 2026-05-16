@@ -26,6 +26,7 @@ Usage
 >>> ensemble = builder.build(models, X_train, y_train)
 >>> proba = ensemble.predict_proba(X_val)
 """
+
 # Author:  Adnan Mohamud — CEO & Founder, PataDoc (patadoc.com)
 # License: MIT
 
@@ -38,7 +39,7 @@ import pandas as pd
 from sklearn.base import BaseEstimator, clone
 from sklearn.model_selection import StratifiedKFold, KFold, cross_val_score
 
-Task   = Literal["clf", "reg"]
+Task = Literal["clf", "reg"]
 Method = Literal["stack", "vote", "blend"]
 
 
@@ -72,7 +73,7 @@ class EnsembleBuilder:
         self,
         task: Task = "clf",
         method: Method = "stack",
-        meta_learner = "lr",
+        meta_learner="lr",
         cv_folds: int = 5,
         blend_weights: Optional[List[float]] = None,
         passthrough: bool = False,
@@ -127,13 +128,15 @@ class EnsembleBuilder:
     # ------------------------------------------------------------------
 
     def _build_stack(
-        self, models: List[Tuple[str, BaseEstimator]],
-        X: pd.DataFrame, y: pd.Series,
+        self,
+        models: List[Tuple[str, BaseEstimator]],
+        X: pd.DataFrame,
+        y: pd.Series,
     ) -> BaseEstimator:
         from sklearn.ensemble import StackingClassifier, StackingRegressor
 
         meta = self._resolve_meta_learner()
-        cv   = self._get_cv(y)
+        cv = self._get_cv(y)
 
         if self.task == "clf":
             ensemble = StackingClassifier(
@@ -160,8 +163,10 @@ class EnsembleBuilder:
     # ------------------------------------------------------------------
 
     def _build_vote(
-        self, models: List[Tuple[str, BaseEstimator]],
-        X: pd.DataFrame, y: pd.Series,
+        self,
+        models: List[Tuple[str, BaseEstimator]],
+        X: pd.DataFrame,
+        y: pd.Series,
     ) -> BaseEstimator:
         from sklearn.ensemble import VotingClassifier, VotingRegressor
 
@@ -178,8 +183,10 @@ class EnsembleBuilder:
     # ------------------------------------------------------------------
 
     def _build_blend(
-        self, models: List[Tuple[str, BaseEstimator]],
-        X: pd.DataFrame, y: pd.Series,
+        self,
+        models: List[Tuple[str, BaseEstimator]],
+        X: pd.DataFrame,
+        y: pd.Series,
     ) -> BaseEstimator:
         """
         Fit each base model and return a WeightedBlender wrapper.
@@ -209,11 +216,13 @@ class EnsembleBuilder:
         )
 
     def _derive_weights(
-        self, models: List[Tuple[str, BaseEstimator]],
-        X: pd.DataFrame, y: pd.Series,
+        self,
+        models: List[Tuple[str, BaseEstimator]],
+        X: pd.DataFrame,
+        y: pd.Series,
     ) -> np.ndarray:
         """Derive blend weights proportional to CV scores."""
-        cv     = self._get_cv(y)
+        cv = self._get_cv(y)
         metric = "roc_auc" if self.task == "clf" else "r2"
         scores = []
         for _, est in models:
@@ -234,11 +243,14 @@ class EnsembleBuilder:
             if self.meta_learner == "lr":
                 if self.task == "clf":
                     from sklearn.linear_model import LogisticRegression
+
                     return LogisticRegression(max_iter=1000, random_state=42)
                 from sklearn.linear_model import Ridge
+
                 return Ridge(alpha=1.0)
             if self.meta_learner == "ridge":
                 from sklearn.linear_model import Ridge
+
                 return Ridge(alpha=1.0)
             raise ValueError(
                 f"meta_learner string must be 'lr' or 'ridge', got '{self.meta_learner}'"
@@ -255,6 +267,7 @@ class EnsembleBuilder:
 # WeightedBlender wrapper — sklearn-compatible
 # ---------------------------------------------------------------------------
 
+
 class _WeightedBlender(BaseEstimator):
     """
     Sklearn-compatible weighted blend of pre-fitted base models.
@@ -267,9 +280,9 @@ class _WeightedBlender(BaseEstimator):
         weights: np.ndarray,
         task: str,
     ) -> None:
-        self.models  = models
+        self.models = models
         self.weights = weights
-        self.task    = task
+        self.task = task
 
     def fit(self, X, y):
         # Already fitted — no-op (supports re-fitting if needed)

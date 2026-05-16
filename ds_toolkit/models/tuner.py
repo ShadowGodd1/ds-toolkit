@@ -32,6 +32,7 @@ Usage
 >>> result.study          # optuna.Study object
 >>> best_model = RandomForestClassifier(**result.best_params).fit(X_train, y_train)
 """
+
 # Author:  Adnan Mohamud — CEO & Founder, PataDoc (patadoc.com)
 # License: MIT
 
@@ -51,10 +52,11 @@ Task = Literal["clf", "reg", "ts"]
 @dataclass
 class TuneResult:
     """Output of TunerOptuna.tune()."""
+
     best_params: Dict[str, Any]
     best_score: float
     n_trials: int
-    study: Any   # optuna.Study — typed as Any to avoid hard import
+    study: Any  # optuna.Study — typed as Any to avoid hard import
 
 
 class TunerOptuna:
@@ -131,9 +133,7 @@ class TunerOptuna:
         try:
             import optuna
         except ImportError as exc:
-            raise ImportError(
-                "TunerOptuna requires optuna: pip install optuna"
-            ) from exc
+            raise ImportError("TunerOptuna requires optuna: pip install optuna") from exc
 
         if not self.verbose:
             optuna.logging.set_verbosity(optuna.logging.WARNING)
@@ -147,7 +147,9 @@ class TunerOptuna:
             est = clone(estimator)
             est.set_params(**params)
             scores = cross_val_score(
-                est, X, y,
+                est,
+                X,
+                y,
                 cv=cv,
                 scoring=self.scoring,
                 n_jobs=-1,
@@ -191,26 +193,26 @@ class TunerOptuna:
     def _get_space(est_name: str):
         """Return the appropriate search space function for an estimator name."""
         spaces = {
-            "LogisticRegression":            TunerOptuna._space_lr,
-            "Ridge":                         TunerOptuna._space_ridge,
-            "RandomForestClassifier":        TunerOptuna._space_rf,
-            "RandomForestRegressor":         TunerOptuna._space_rf,
-            "ExtraTreesClassifier":          TunerOptuna._space_rf,
-            "ExtraTreesRegressor":           TunerOptuna._space_rf,
-            "GradientBoostingClassifier":    TunerOptuna._space_gbm,
-            "GradientBoostingRegressor":     TunerOptuna._space_gbm,
-            "XGBClassifier":                 TunerOptuna._space_xgb,
-            "XGBRegressor":                  TunerOptuna._space_xgb,
-            "LGBMClassifier":                TunerOptuna._space_lgbm,
-            "LGBMRegressor":                 TunerOptuna._space_lgbm,
+            "LogisticRegression": TunerOptuna._space_lr,
+            "Ridge": TunerOptuna._space_ridge,
+            "RandomForestClassifier": TunerOptuna._space_rf,
+            "RandomForestRegressor": TunerOptuna._space_rf,
+            "ExtraTreesClassifier": TunerOptuna._space_rf,
+            "ExtraTreesRegressor": TunerOptuna._space_rf,
+            "GradientBoostingClassifier": TunerOptuna._space_gbm,
+            "GradientBoostingRegressor": TunerOptuna._space_gbm,
+            "XGBClassifier": TunerOptuna._space_xgb,
+            "XGBRegressor": TunerOptuna._space_xgb,
+            "LGBMClassifier": TunerOptuna._space_lgbm,
+            "LGBMRegressor": TunerOptuna._space_lgbm,
         }
         return spaces.get(est_name, TunerOptuna._space_generic)
 
     @staticmethod
     def _space_lr(trial, _):
         return {
-            "C":       trial.suggest_float("C", 1e-4, 100, log=True),
-            "solver":  trial.suggest_categorical("solver", ["lbfgs", "saga"]),
+            "C": trial.suggest_float("C", 1e-4, 100, log=True),
+            "solver": trial.suggest_categorical("solver", ["lbfgs", "saga"]),
             "max_iter": 1000,
         }
 
@@ -221,46 +223,46 @@ class TunerOptuna:
     @staticmethod
     def _space_rf(trial, _):
         return {
-            "n_estimators":      trial.suggest_int("n_estimators", 50, 500),
-            "max_depth":         trial.suggest_int("max_depth", 3, 20),
+            "n_estimators": trial.suggest_int("n_estimators", 50, 500),
+            "max_depth": trial.suggest_int("max_depth", 3, 20),
             "min_samples_split": trial.suggest_int("min_samples_split", 2, 20),
-            "min_samples_leaf":  trial.suggest_int("min_samples_leaf", 1, 10),
-            "max_features":      trial.suggest_categorical("max_features", ["sqrt", "log2", None]),
+            "min_samples_leaf": trial.suggest_int("min_samples_leaf", 1, 10),
+            "max_features": trial.suggest_categorical("max_features", ["sqrt", "log2", None]),
         }
 
     @staticmethod
     def _space_gbm(trial, _):
         return {
-            "n_estimators":   trial.suggest_int("n_estimators", 50, 500),
-            "learning_rate":  trial.suggest_float("learning_rate", 1e-3, 0.3, log=True),
-            "max_depth":      trial.suggest_int("max_depth", 2, 8),
-            "subsample":      trial.suggest_float("subsample", 0.5, 1.0),
+            "n_estimators": trial.suggest_int("n_estimators", 50, 500),
+            "learning_rate": trial.suggest_float("learning_rate", 1e-3, 0.3, log=True),
+            "max_depth": trial.suggest_int("max_depth", 2, 8),
+            "subsample": trial.suggest_float("subsample", 0.5, 1.0),
             "min_samples_leaf": trial.suggest_int("min_samples_leaf", 1, 20),
         }
 
     @staticmethod
     def _space_xgb(trial, _):
         return {
-            "n_estimators":     trial.suggest_int("n_estimators", 50, 500),
-            "learning_rate":    trial.suggest_float("learning_rate", 1e-3, 0.3, log=True),
-            "max_depth":        trial.suggest_int("max_depth", 2, 10),
-            "subsample":        trial.suggest_float("subsample", 0.5, 1.0),
+            "n_estimators": trial.suggest_int("n_estimators", 50, 500),
+            "learning_rate": trial.suggest_float("learning_rate", 1e-3, 0.3, log=True),
+            "max_depth": trial.suggest_int("max_depth", 2, 10),
+            "subsample": trial.suggest_float("subsample", 0.5, 1.0),
             "colsample_bytree": trial.suggest_float("colsample_bytree", 0.5, 1.0),
-            "reg_alpha":        trial.suggest_float("reg_alpha", 1e-8, 10.0, log=True),
-            "reg_lambda":       trial.suggest_float("reg_lambda", 1e-8, 10.0, log=True),
+            "reg_alpha": trial.suggest_float("reg_alpha", 1e-8, 10.0, log=True),
+            "reg_lambda": trial.suggest_float("reg_lambda", 1e-8, 10.0, log=True),
         }
 
     @staticmethod
     def _space_lgbm(trial, _):
         return {
-            "n_estimators":     trial.suggest_int("n_estimators", 50, 500),
-            "learning_rate":    trial.suggest_float("learning_rate", 1e-3, 0.3, log=True),
-            "num_leaves":       trial.suggest_int("num_leaves", 20, 300),
-            "subsample":        trial.suggest_float("subsample", 0.5, 1.0),
+            "n_estimators": trial.suggest_int("n_estimators", 50, 500),
+            "learning_rate": trial.suggest_float("learning_rate", 1e-3, 0.3, log=True),
+            "num_leaves": trial.suggest_int("num_leaves", 20, 300),
+            "subsample": trial.suggest_float("subsample", 0.5, 1.0),
             "colsample_bytree": trial.suggest_float("colsample_bytree", 0.5, 1.0),
-            "reg_alpha":        trial.suggest_float("reg_alpha", 1e-8, 10.0, log=True),
-            "reg_lambda":       trial.suggest_float("reg_lambda", 1e-8, 10.0, log=True),
-            "verbose":          -1,
+            "reg_alpha": trial.suggest_float("reg_alpha", 1e-8, 10.0, log=True),
+            "reg_lambda": trial.suggest_float("reg_lambda", 1e-8, 10.0, log=True),
+            "verbose": -1,
         }
 
     @staticmethod

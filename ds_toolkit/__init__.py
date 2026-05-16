@@ -37,7 +37,7 @@ License    : MIT
 # Author:  Adnan Mohamud — CEO & Founder, PataDoc (patadoc.com)
 # License: MIT
 
-__version__ = "1.0.1"
+__version__ = "1.0.4"
 __author__ = "Adnan Mohamud"
 __email__ = "adnan@patadoc.com"
 __license__ = "MIT"
